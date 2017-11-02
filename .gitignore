@@ -1,0 +1,10 @@
+*.class
+*.apk
+bin/
+gen/
+.settings/
+proguard/
+*.classpath
+/doExt_do_BarcodeView/do_build.xml
+/doExt_do_BarcodeView/libs/docore.jar
+/doExt_do_BarcodeView/do_BarcodeView.zip
