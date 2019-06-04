@@ -30,7 +30,8 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
-import com.hxcode.HxDecode;
+// 移除汉信码
+// import com.hxcode.HxDecode;
 
 import doext.implement.do_BarcodeView_View;
 import doext.zxing.barcodeview.camera.BracodeConstant;
@@ -75,25 +76,26 @@ final class DecodeHandler extends Handler {
 	 */
 	private void decode(byte[] data, int width, int height) {
 		Result rawResult = null;
+		//移除汉信码
 		//汉信码
-		HxDecode hxDecode = new HxDecode();
-		byte[] imgbytes = new byte[width * height];
-		int iwidth = hxDecode.preprocessImg(data, width, height, imgbytes);
-		if (iwidth > 0 && imgbytes != null) {
-			byte[] decodebytes = new byte[4 * 1024];
-			iwidth = hxDecode.DeCodeCsbyte(imgbytes, iwidth, decodebytes);
-			if (iwidth > 0) {
-				try {
-					if (isUTF8(decodebytes, 0, iwidth)) {
-						rawResult = new Result(new String(decodebytes, 0, iwidth, "UTF-8"), imgbytes, null, BarcodeFormat.HX_CODE);
-					} else {
-						rawResult = new Result(new String(decodebytes, 0, iwidth, "GBK"), imgbytes, null, BarcodeFormat.HX_CODE);
-					}
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		// HxDecode hxDecode = new HxDecode();
+		// byte[] imgbytes = new byte[width * height];
+		// int iwidth = hxDecode.preprocessImg(data, width, height, imgbytes);
+		// if (iwidth > 0 && imgbytes != null) {
+		// 	byte[] decodebytes = new byte[4 * 1024];
+		// 	iwidth = hxDecode.DeCodeCsbyte(imgbytes, iwidth, decodebytes);
+		// 	if (iwidth > 0) {
+		// 		try {
+		// 			if (isUTF8(decodebytes, 0, iwidth)) {
+		// 				rawResult = new Result(new String(decodebytes, 0, iwidth, "UTF-8"), imgbytes, null, BarcodeFormat.HX_CODE);
+		// 			} else {
+		// 				rawResult = new Result(new String(decodebytes, 0, iwidth, "GBK"), imgbytes, null, BarcodeFormat.HX_CODE);
+		// 			}
+		// 		} catch (UnsupportedEncodingException e) {
+		// 			e.printStackTrace();
+		// 		}
+		// 	}
+		// }
 		if (rawResult == null) {
 			//modify here
 			byte[] rotatedData = new byte[data.length];
@@ -124,137 +126,4 @@ final class DecodeHandler extends Handler {
 			message.sendToTarget();
 		}
 	}
-
-	private boolean isUTF8(byte[] data, int start, int end) {
-		boolean canBeUTF8 = true;
-		for (int i = start; i < end; i++) {
-			int value = data[i] & 0xFF;
-
-			//两字节情况
-			if (value >= 0xC0 && value <= 0xDF) {
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-			} else if (value >= 0xE0 && value <= 0xEF) { //三字节情况
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-			} else if (value >= 0xF0 && value <= 0xF7) { //四字节情况
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-			} else if (value >= 0xF8 && value <= 0xFB) { //五字节情况
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-			} else if (value >= 0xFC && value <= 0xFD) { //六字节情况
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-
-				i++;
-				value = data[i] & 0xFF;
-				if (value >= 0x80 && value <= 0xBF) {
-
-				} else {
-					return false;
-				}
-			}
-
-		}
-		return canBeUTF8;
-	}
-
 }

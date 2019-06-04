@@ -19,5 +19,6 @@ public abstract class do_BarcodeView_MAbstract extends DoUIModule{
         super.onInit();
         //注册属性
     	this.registProperty(new DoProperty("scanArea", PropertyDataType.String, "", false));
+    	this.registProperty(new DoProperty("decodeFormats", PropertyDataType.String, "", false));
 	}
 }
