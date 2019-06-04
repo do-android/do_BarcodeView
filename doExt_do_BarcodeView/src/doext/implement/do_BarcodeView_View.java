@@ -161,10 +161,39 @@ public class do_BarcodeView_View extends FrameLayout implements DoIUIModuleView,
 					CameraManager.get().setRect(rect);
 				}
 			}
+		}else if (_changedValues.containsKey("decodeFormats")) {
+			String _decodeFormats = _changedValues.get("decodeFormats");
+			decodeFormats = null;
+			if (null != _decodeFormats && !"".equals(_decodeFormats)) {
+				String[] _formats = _decodeFormats.split(",");
+				if (null != _formats && _formats.length > 0) {
+					for (int i = 0; i < _formats.length; i++) {
+						switch(_formats[i]){
+							case "CODE_128": addFormats(BarcodeFormat.CODE_128);; break;
+							case "UPC_A": addFormats(BarcodeFormat.CODE_128);; break;
+							case "UPC_E": addFormats(BarcodeFormat.CODE_128);; break;
+							case "EAN_13": addFormats(BarcodeFormat.CODE_128);; break;
+							case "EAN_8": addFormats(BarcodeFormat.CODE_128);; break;
+							case "RSS_14": addFormats(BarcodeFormat.CODE_128);; break;
+							case "CODE_39": addFormats(BarcodeFormat.CODE_128);; break;
+							case "CODE_93": addFormats(BarcodeFormat.CODE_128);; break;
+							case "ITF": addFormats(BarcodeFormat.CODE_128);; break;
+							case "QR_CODE": addFormats(BarcodeFormat.CODE_128);; break;
+							case "DATA_MATRIX": addFormats(BarcodeFormat.CODE_128);; break;
+						}
+					}
+				}
+			}
 		}
-
 	}
-
+	private void addFormats(BarcodeFormat fmt){
+		if(null == decodeFormats){
+			decodeFormats = new Vector<BarcodeFormat>(1);
+			decodeFormats.add(fmt);
+		}else{
+			decodeFormats.addElement(fmt);
+		}
+	}
 	/**
 	 * 同步方法，JS脚本调用该组件对象方法时会被调用，可以根据_methodName调用相应的接口实现方法；
 	 * 
@@ -241,8 +270,9 @@ public class do_BarcodeView_View extends FrameLayout implements DoIUIModuleView,
 		this.scriptEngine = _scriptEngine;
 		this.callbackFuncName = _callbackFuncName;
 		if (null != handler) {
-			handler.init(); // 启动线程解码
-		} else {
+			handler.init();
+		}else{
+			handler = new CaptureActivityHandler(this, decodeFormats, characterSet);
 			isStart = true;
 		}
 
@@ -359,8 +389,9 @@ public class do_BarcodeView_View extends FrameLayout implements DoIUIModuleView,
 			surfaceHolder.addCallback(this);
 			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
-		decodeFormats = null;
-		characterSet = null;
+		// 如果要多次扫描就不能重置这两个参数
+		// decodeFormats = null;
+		// characterSet = null;
 	}
 
 	private void initCamera(SurfaceHolder surfaceHolder) {
